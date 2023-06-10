@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import getVideoData from './API/GlobalAPI'
-import * as styling from './App.scss'
+import {getVideoData} from './API/GlobalAPI'
+import {ReactElement} from 'react'
+import './App.scss'
 
-function App() {
-  const [count, setCount] = useState(0)
+const App:React.FC = () : ReactElement => {
+  const [count, setCount] = useState(0);
 
-  console.log(styling);
-  console.log(getVideoData);
+  console.log(getVideoData());
 
   return (
     <>
