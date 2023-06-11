@@ -1,6 +1,4 @@
 import { useState, useRef } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import {getVideoData} from './API/GlobalAPI'
 import {ReactElement} from 'react'
 import './App.scss'
@@ -40,7 +38,7 @@ const App:React.FC = () : ReactElement => {
     const constructedGenreCheckboxes = [];
     for(const i in genres.current){
       constructedGenreCheckboxes.push(
-        <div key = {i}  className = {genres.current[i] + " " + "checkbox"}><input  key={i} type = "checkbox" onChange={(ev)=>{updateOption(ev, genres.current[i]);}}/><li>{genres.current[i]}</li></div>
+        <div key = {"checkBox" + i}  className = {genres.current[i] + " " + "checkBox"}><input  key={i} type = "checkbox" onChange={(ev)=>{updateOption(ev, genres.current[i]);}}/><li>{genres.current[i]}</li></div>
       );
     }
     return constructedGenreCheckboxes;
@@ -49,8 +47,12 @@ const App:React.FC = () : ReactElement => {
   
   return (
     <>
-      <input type="text" placeholder="Search" />
-      {getGenreCheckboxes()}
+      <div id = "outerFilterContainer" className = "container">
+        <input type="text" placeholder="Search" />
+        <div id = "checkboxContainer" className = "container">
+          {getGenreCheckboxes()}
+        </div>
+      </div>
     </>
   )
 }
