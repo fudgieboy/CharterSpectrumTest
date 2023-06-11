@@ -67,3 +67,28 @@ li{
   // position: ab;
   
 }
+
+#movieList{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  left: 0px;
+  // position: ab;
+}
+
+.movieCard{
+}
+
+
+.movieInfo{
+  position: relative;
+  h1{
+    font-size: 2em;
+    justify-content: center;
+    word-break: break-word;
+    width: 10em;
+}
+}
