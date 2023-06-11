@@ -11,8 +11,10 @@ const App:React.FC = () : ReactElement => {
   const data2 = useRef(testData2);
   const [modalActive, toggleModalActive] = useState<boolean>(false);
   const [selectedGenres, setSelectedGenres] = useState<Array<string>>([]);
+  const [searchVal, setSearchVal] = useState<string>(""); 
+  const [isTransitioning, setIsTransitioning] = useState<boolean >(false);
+  const modal = useRef(null);
   const genres = useRef(null); 
-  const [searchVal, setSearchVal] = useState<string>("");  
   
   let sum = data.current.map((subData)=>{
     return subData.genres;
@@ -47,20 +49,75 @@ const App:React.FC = () : ReactElement => {
     return constructedGenreCheckboxes;
   };
 
-  const toggleModal = () => {
-    console.log(modalActive);
-    toggleModalActive(!modalActive);
+  const toggleModal = (isModalActive) => {
+    const time = new Date();
+
+    if(isTransitioning == false){
+      const interval = setInterval(() => {
+        let time2 = (new Date() - time.getTime());
+
+        if(isModalActive == true){
+          modal.current.style.display = 'block';
+          modal.current.style.backdropFilter = 'blur(' + (time2 / 100) + 'px)';
+
+        } else if (isModalActive == false){
+          modal.current.style.backdropFilter = 'blur(' + (5-(time2 / 100)) + 'px)';
+        }
+
+        setIsTransitioning(true);
+        if(time2 > 1000){
+          if (isModalActive == false){
+            modal.current.style.display = 'none';
+          }
+          setIsTransitioning(false);
+          clearInterval(interval);
+        }
+      }, 50);
+    toggleModalActive(isModalActive);
+    }
   };
 
   return (
     <> 
-      <div id = "modal" onClick = {()=>{toggleModal()}} className = {"modal anim modal" + modalActive}/>
+      <div id = "modal" 
+        onClick = {()=>{toggleModal(false)}}
+        ref={modal}
+        style = {{display: "none"}}
+        className = {"modal anim modal" + modalActive}>
+        <div id = "modalInner" className = "anim">
+
+        <img id = "heroImg" className = "anim" src = {"../movieHeroImages/" + data2.current[0].id + ".jpeg" } 
+          onClick = {(ev)=>{ev.stopPropagation();}}
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null; // prevents looping
+            currentTarget.src="../public/movieHeroImages/defaultImage.jpeg";
+          }}
+          alt = {data2.current[0].title + " poster"}></img>
+          
+          <div id = "movieData">
+            <h1>{data2.current[0].title}</h1>
+            <h3>{data2.current[0].duration}</h3>
+            <h3>{data2.current[0].releaseDate}</h3>
+            <h3>{data2.current[0].releaseYear}</h3>
+            <h3>{data2.current[0].genres}</h3>
+            <h1>{data2.current[0].moods}</h1>
+            <h2>{data2.current[0].description}</h2>
+
+            {data2.current[0].topCast.map((castMember)=>{
+              return <div><h3>{castMember.name}</h3><h3>{castMember.characterName}</h3></div>
+            })}
+          </div>
+
+        </div>
+      </div>
+
+      
       <div id = "outerFilterContainer" className = "container">
         <input type="text" placeholder="Search" onChange = {(ev)=>{setSearchVal(ev.target.value)}}/>
         <div id = "checkboxContainer" className = "container">
           {getGenreCheckboxes()}
         </div>
-      </div>
+      App.</div>
       <div id = "movieList">
         {data.current.map((subData)=>{ 
           if(subData.title.toLowerCase().indexOf(searchVal.toLowerCase()) == -1){
@@ -73,18 +130,20 @@ const App:React.FC = () : ReactElement => {
             }
           }
 
-          return <div key = {uuidv4()} className = "movieCard" onClick = {()=>{toggleModal()}}>
-            <img src = {"../public/moviePosterImages/" + subData.id + ".jpeg" } 
-              onError={({ currentTarget }) => {
-                currentTarget.onerror = null; // prevents looping
-                currentTarget.src="../public/moviePosterImages/defaultImage.jpeg";
-              }}
-              alt = {subData.title + " poster"}></img>
+          return <div key = {uuidv4()} className = "movieCard anim" onClick = {()=>{toggleModal(true)}}>
+            <div className = "cardInnerContainer">
+              <img className = "anim" src = {"../moviePosterImages/" + subData.id + ".jpeg" } 
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src="../public/moviePosterImages/defaultImage.jpeg";
+                }}
+                alt = {subData.title + " poster"}></img>
 
-            <div className = "movieInfo">
-              <h1>{subData.title}</h1>
-              {/* <h2>Rating: {subData.vote_average}</h2>
-              <h2>Release Date: {subData.release_date}</h2> */}
+              <div className = "movieInfo">
+                <h1>{subData.title}</h1>
+                {/* <h2>Rating: {subData.vote_average}</h2>
+                <h2>Release Date: {subData.release_date}</h2> */}
+              </div>
             </div>
           </div>
         })}

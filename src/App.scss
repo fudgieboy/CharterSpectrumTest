@@ -14,36 +14,33 @@ li{
   top: 0px;
 }
 
+.anim{
+  -webkit-transition: all .5s; 
+     -moz-transition: all .5s;
+       -o-transition: all .5s;
+          transition: all .5s;  
+}
+
 #checkboxContainer{
   position: relative;
 }
 
 .modaltrue{
-  display: block;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modalfalse{
-  display: none;
+  background-color: rgba(244, 244, 244, 0.0);
 }
-
-.anim{
-  -webkit-transition: all 5s; 
-     -moz-transition: all 5s;
-       -o-transition: all 5s;
-          transition: all 5s;  
-}
-
-$blurEffect: blur(20px);
 
 .modal{
   width: 100%;
+  background-color: rgba(0, 0, 0, 0.0);
   height: 100%;
   position: fixed;
   z-index: 10;
   left: 0px;
   top: 0px;
-  background-color: rgba(244, 244, 244, 0.1);
-  backdrop-filter: $blurEffect;
 }
 
 .checkBox{
@@ -57,6 +54,7 @@ $blurEffect: blur(20px);
   
 }
 
+
 #movieList{
   display: flex;
   flex-wrap: wrap;
@@ -65,15 +63,64 @@ $blurEffect: blur(20px);
   width: 100%;
   height: 100%;
   left: 0px;
+  // background-color: rgba(0, 0, 0, 0.61);
+  border: 10px yellow;
+  box-sizing: border-box;
+  border-style: dashed double none;
   // position: ab;
 }
 
 .movieInfo{
-    position: relative;
+      top: 0px;
+      position: relative;
     h1{
       font-size: 2em;
-      justify-content: center;
+      position: absolute;
+      margin: 0 auto;
+      left: 0px;
+      right: 0px;
+      // justify-content: center;
       word-break: break-word;
       width: 10em;
   }
 }
+
+
+img{
+  transform: scale(.75);
+  // box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 0px 0px rgb(0, 0, 0);
+}
+
+img:hover{
+  transform: scale(.85);
+  box-shadow: 15px 15px 15px 15px rgba(0, 0, 0, .5);
+}
+
+#movieData{
+  position: absolute;
+  top: 50%;
+}
+
+#heroImg{
+  margin: 0 auto;
+  left: 0px;
+  right: 0px;
+  position: absolute;
+}
+
+// .movieCard:hover{
+//   box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+// }
+
+// /* Pre-render the bigger shadow, but hide it */
+// .movieCard::after {
+//   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+//   opacity: 0;
+//   transition: opacity 0.3s ease-in-out;
+// }
+
+// /* Transition to showing the bigger shadow on hover */
+// .movieCard:hover::after {
+//   opacity: 1;
+// }
