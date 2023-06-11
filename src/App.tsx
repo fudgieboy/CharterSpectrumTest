@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import {getVideoData} from './API/GlobalAPI'
+// import {getVideoData} from './API/GlobalAPI'
 import {ReactElement} from 'react'
 import './App.scss'
 import { v4 as uuidv4 } from "uuid"
@@ -18,26 +18,28 @@ const App:React.FC = () : ReactElement => {
   const modalInner = useRef(null);
   const genres = useRef(null); 
   
-  let sum = data.current.map((subData)=>{
+  const possibleGenres = data.current.map((subData)=>{
     return subData.genres;
   })
 
-  sum = sum.reduce((genre1, genre2)=>{
-    let cat = genre1.concat(genre2.filter((genre)=>{
+  const uniqueGenres = possibleGenres.reduce((genre1, genre2)=>{
+    const cat = genre1.concat(genre2.filter((genre)=>{
       return genre1.indexOf(genre) == -1;
     }));
     return cat;
 
   })
 
-  genres.current = sum
+  genres.current = uniqueGenres
 
   const toggleModal = (isModalActive):void => {
     const time = new Date();
 
     if(isTransitioning == false){
       const interval = setInterval(() => {
-        let time2 = (new Date() - time.getTime());
+        const time2 = (new Date().getTime() - time.getTime());
+
+        console.log(time2);
 
         if(isModalActive == true){
           modal.current.style.display = 'block';
