@@ -15,6 +15,7 @@ const App:React.FC = () : ReactElement => {
   const [isTransitioning, setIsTransitioning] = useState<boolean >(false);
   const [enlargedHero, setEnlargedHero] = useState<boolean>(false);
   const modal = useRef(null);
+  const modalInner = useRef(null);
   const genres = useRef(null); 
   
   let sum = data.current.map((subData)=>{
@@ -31,7 +32,7 @@ const App:React.FC = () : ReactElement => {
 
   genres.current = sum
 
-  const toggleModal = (isModalActive) => {
+  const toggleModal = (isModalActive):void => {
     const time = new Date();
 
     if(isTransitioning == false){
@@ -41,9 +42,10 @@ const App:React.FC = () : ReactElement => {
         if(isModalActive == true){
           modal.current.style.display = 'block';
           modal.current.style.backdropFilter = 'blur(' + (time2 / 100) + 'px)';
-
+          modalInner.current.style.opacity = (time2 / 1000).toString();
         } else if (isModalActive == false){
           modal.current.style.backdropFilter = 'blur(' + (5-(time2 / 100)) + 'px)';
+          modalInner.current.style.opacity = (1- (time2 / 1000)).toString();
         }
 
             setIsTransitioning(true);
@@ -60,7 +62,7 @@ const App:React.FC = () : ReactElement => {
     }
   };
 
-  const updateOption = (ev, genre:string) => {
+  const updateOption = (ev, genre:string):void => {
     if(ev.target.checked){
       setSelectedGenres([...selectedGenres, genre]);
     } else {
@@ -80,23 +82,28 @@ const App:React.FC = () : ReactElement => {
   };
 
   const getMovieList = ():ReactElement [] => {
+
+    let count = 0;
+
     const movieList = data.current.map((subData)=>{
       if(subData.title.toLowerCase().indexOf(searchVal.toLowerCase()) == -1){
-        return;
+        return null;
       }
 
       for(let i = 0; i < selectedGenres.length; i++){
         if(subData.genres.indexOf(selectedGenres[i]) == -1){
-          return;
+          return null;
         }
       }
+
+      count = count+ 1;
 
       return <div key = {uuidv4()} className = "movieCard anim" onClick = {()=>{toggleModal(true)}}>
         <div className = "cardInnerContainer">
           <img id="posterImg" className = "anim" src = {"../moviePosterImages/" + subData.id + ".jpeg" } 
             onError={({ currentTarget }) => {
               currentTarget.onerror = null; // prevents looping
-              currentTarget.src="../public/moviePosterImages/defaultImage.jpeg";
+              currentTarget.src="../moviePosterImages/defaultImage.jpeg";
             }}
             alt = {subData.title + " poster"}></img>
 
@@ -109,18 +116,22 @@ const App:React.FC = () : ReactElement => {
       </div>
     })
 
-    console.log(movieList);
+    console.log(count);
 
-    return movieList;
+    if(count == 0){
+      return <div className = "noResults"><h1>No Results</h1></div>
+    } else {
+      return movieList;
+    }
   }
 
   const getModal = ():ReactElement[] => { 
-    return <div id = "modalInner" className = "anim">
+    return <div id = "modalInner" ref={modalInner} className = "anim">
               <img id = "heroImg" className = {"anim enlarged" + enlargedHero} src = {"../movieHeroImages/" + data2.current[0].id + ".jpeg" } 
                 onClick = {(ev)=>{ev.stopPropagation(); setEnlargedHero(!enlargedHero)}}
                 onError={({ currentTarget }) => {
                   currentTarget.onerror = null; // prevents looping
-                  currentTarget.src="../public/movieHeroImages/defaultImage.jpeg";
+                  currentTarget.src="../movieHeroImages/defaultImage.jpeg";
                 }}
                 alt = {data2.current[0].title + " poster"}></img>
                 
@@ -147,11 +158,8 @@ const App:React.FC = () : ReactElement => {
         ref={modal}
         style = {{display: "none"}}
         className = {"modal anim modal" + modalActive}>
-
           {getModal()}
       </div>
-
-      
       <div id = "outerFilterContainer" className = "container">
         <input type="text" placeholder="Search" onChange = {(ev)=>{setSearchVal(ev.target.value)}}/>
         <div id = "checkboxContainer" className = "container">
