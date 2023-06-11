@@ -2,15 +2,17 @@ import { useState, useRef } from 'react'
 import {getVideoData} from './API/GlobalAPI'
 import {ReactElement} from 'react'
 import './App.scss'
+import { v4 as uuidv4 } from "uuid"
 import testData from "./API/testData.ts"
 import testData2 from "./API/testData2.ts"
 
 const App:React.FC = () : ReactElement => {
   const data = useRef(testData);
   const data2 = useRef(testData2);
+  const [modalActive, toggleModalActive] = useState<boolean>(false);
+  const [selectedGenres, setSelectedGenres] = useState<Array<string>>([]);
   const genres = useRef(null); 
-  let [selectedGenres, setSelectedGenres] = useState([]);
-  const [searchVal, setSearchVal] = useState("");  
+  const [searchVal, setSearchVal] = useState<string>("");  
   
   let sum = data.current.map((subData)=>{
     return subData.genres;
@@ -45,9 +47,14 @@ const App:React.FC = () : ReactElement => {
     return constructedGenreCheckboxes;
   };
 
-  // console.log(data)
+  const toggleModal = () => {
+    console.log(modalActive);
+    toggleModalActive(!modalActive);
+  };
+
   return (
-    <>
+    <> 
+      <div id = "modal" onClick = {()=>{toggleModal()}} className = {"modal anim modal" + modalActive}/>
       <div id = "outerFilterContainer" className = "container">
         <input type="text" placeholder="Search" onChange = {(ev)=>{setSearchVal(ev.target.value)}}/>
         <div id = "checkboxContainer" className = "container">
@@ -66,8 +73,14 @@ const App:React.FC = () : ReactElement => {
             }
           }
 
-          return <div className = "movieCard">
-            <img src = {"../public/moviePosterImages/" + subData.id + ".jpeg" }  alt = {}></img>
+          return <div key = {uuidv4()} className = "movieCard" onClick = {()=>{toggleModal()}}>
+            <img src = {"../public/moviePosterImages/" + subData.id + ".jpeg" } 
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null; // prevents looping
+                currentTarget.src="../public/moviePosterImages/defaultImage.jpeg";
+              }}
+              alt = {subData.title + " poster"}></img>
+
             <div className = "movieInfo">
               <h1>{subData.title}</h1>
               {/* <h2>Rating: {subData.vote_average}</h2>
