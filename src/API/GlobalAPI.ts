@@ -17,8 +17,8 @@ export const getVideoData = async() => {
 
   // const json = await res.json();
   
-  for(let i = 0; i< testData2.length; i++){
-    // console.log(i, testData2[i].id, testData2[i].genres, testData2[i].title); 
-  }
+  // for(let i = 0; i< testData2.length; i++){
+  //   // console.log(i, testData2[i].id, testData2[i].genres, testData2[i].title); 
+  // }
 
 }
