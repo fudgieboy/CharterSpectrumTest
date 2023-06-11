@@ -116,16 +116,14 @@ const App:React.FC = () : ReactElement => {
       </div>
     })
 
-    console.log(count);
-
     if(count == 0){
-      return <div className = "noResults"><h1>No Results</h1></div>
+      return [<div className = "noResults"><h1>No Results</h1></div>]
     } else {
       return movieList;
     }
   }
 
-  const getModal = ():ReactElement[] => { 
+  const getModal = ():ReactElement => { 
     return <div id = "modalInner" ref={modalInner} className = "anim">
               <img id = "heroImg" className = {"anim enlarged" + enlargedHero} src = {"../movieHeroImages/" + data2.current[0].id + ".jpeg" } 
                 onClick = {(ev)=>{ev.stopPropagation(); setEnlargedHero(!enlargedHero)}}
