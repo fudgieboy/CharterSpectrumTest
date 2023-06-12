@@ -1,24 +1,35 @@
+import axios from 'axios';
 
-export const getVideoData = async() => {
-  // const res = await fetch("https://code-challenge.spectrumtoolbox.com/api/movies", {
-  //   headers: {
-  //     Authorization: "Api-Key q3MNxtfep8Gt",
-  //   },
-  // })
+export const getAllMovies = async (callback) => {
 
-  // const json = await res.json();
-
-  
-  //   const res = await fetch("https://code-challenge.spectrumtoolbox.com/api/movies/" + testData[2].id, {
-  //   headers: {
-  //     Authorization: "Api-Key q3MNxtfep8Gt",
-  //   },
-  // })
-
-  // const json = await res.json();
-  
-  // for(let i = 0; i< testData2.length; i++){
-  //   // console.log(i, testData2[i].id, testData2[i].genres, testData2[i].title); 
-  // }
-
+  const res = await fetch("https://code-challenge.spectrumtoolbox.com/api/movies", {
+    headers: {
+      Authorization: "Api-Key q3MNxtfep8Gt",
+    },
+  }).then((resData)=>{
+    if(resData.status === 200){
+      const reader = resData.body.getReader();
+      reader.read().then((res)=>{
+        const s = String.fromCharCode.apply(null, res.value);
+          const decoded = JSON.parse(s);
+          callback(decoded.data);
+      });
+    }
+  })
+}
+export const getMovieData = async(movieID, callback) => {
+    const res = await fetch("https://code-challenge.spectrumtoolbox.com/api/movies/" + movieID, {
+      headers: {
+        Authorization: "Api-Key q3MNxtfep8Gt",
+      },
+    }).then((resData)=>{
+      if(resData.status === 200){
+        const reader = resData.body.getReader();
+        reader.read().then((res)=>{
+          const s = String.fromCharCode.apply(null, res.value);
+            const decoded = JSON.parse(s);
+            callback(decoded.data);
+        });
+      }
+    })
 }

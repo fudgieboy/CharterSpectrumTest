@@ -1,36 +1,68 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 // import {getVideoData} from './API/GlobalAPI'
 import {ReactElement} from 'react'
 import './App.scss'
 import { v4 as uuidv4 } from "uuid"
-import testData from "./API/testData.ts"
-import testData2 from "./API/testData2.ts"
+import {getAllMovies, getMovieData} from './API/GlobalAPI'
+
+// import testData from "./API/testData.ts"
+// import testData2 from "./API/testData2.ts"
+import {Modal} from './Modal.tsx'
+import { Checkboxes } from './Checkboxes.tsx'
+import { Searchbox } from './Searchbox.tsx'
+import { Gallery } from './Gallery.tsx'
 
 const App:React.FC = () : ReactElement => {
-  const data = useRef(testData);
-  const data2 = useRef(testData2);
+  const data = useRef(null);
+  const data2 = useRef(null);
   const [modalActive, toggleModalActive] = useState<boolean>(false);
   const [selectedGenres, setSelectedGenres] = useState<Array<string>>([]);
   const [searchVal, setSearchVal] = useState<string>(""); 
   const [isTransitioning, setIsTransitioning] = useState<boolean >(false);
-  const [enlargedHero, setEnlargedHero] = useState<boolean>(false);
   const modal = useRef(null);
   const modalInner = useRef(null);
   const genres = useRef(null); 
-  
-  const possibleGenres = data.current.map((subData)=>{
-    return subData.genres;
-  })
+  const possibleGenres = useRef(null);
+  const uniqueGenres = useRef(null);
+  const [isLoading, setLoading] = useState(true);
 
-  const uniqueGenres = possibleGenres.reduce((genre1, genre2)=>{
-    const cat = genre1.concat(genre2.filter((genre)=>{
-      return genre1.indexOf(genre) == -1;
-    }));
-    return cat;
+  useEffect(() => {
+    getAllMovies((res)=>{
+      data.current = res;
+      data2.current = [];
 
-  })
+      for(let i = 0; i < data.current.length; i++){
+        getMovieData(data.current[i].id, (res)=>{  
+          data2.current.push(res);
 
-  genres.current = uniqueGenres
+          if(data2.current.length == data.current.length && i == data.current.length - 1){
+
+            if(data2.current.length!=0){
+              localStorage.setItem("movieDetailInfo", JSON.stringify(data2));
+            } 
+            
+            possibleGenres.current = data.current.map((subData)=>{
+              return subData.genres;
+            })
+
+            uniqueGenres.current = possibleGenres.current.reduce((genre1, genre2)=>{
+              const cat = genre1.concat(genre2.filter((genre)=>{
+                return genre1.indexOf(genre) == -1;
+              }));
+              return cat;
+
+            })
+
+            genres.current = uniqueGenres
+
+            setLoading(false);
+          }
+        });
+
+      }
+      
+    });
+  }, []) 
 
   const toggleModal = (isModalActive):void => {
     const time = new Date();
@@ -38,8 +70,6 @@ const App:React.FC = () : ReactElement => {
     if(isTransitioning == false){
       const interval = setInterval(() => {
         const time2 = (new Date().getTime() - time.getTime());
-
-        console.log(time2);
 
         if(isModalActive == true){
           modal.current.style.display = 'block';
@@ -54,7 +84,6 @@ const App:React.FC = () : ReactElement => {
         if(time2 > 1000){
           if (isModalActive == false){
             modal.current.style.display = 'none';
-            setEnlargedHero(false);
           }
           setIsTransitioning(false);
           clearInterval(interval);
@@ -63,6 +92,12 @@ const App:React.FC = () : ReactElement => {
     toggleModalActive(isModalActive);
     }
   };
+
+  const getModal = ():ReactElement => { 
+    return <div id = "modalInner" ref={modalInner} className = "anim">
+              <Modal detailedInfo = {data2.current} />
+            </div>
+  }
 
   const updateOption = (ev, genre:string):void => {
     if(ev.target.checked){
@@ -73,82 +108,20 @@ const App:React.FC = () : ReactElement => {
     }
   };
 
-  const getGenreCheckboxes = (): ReactElement[]=> {
-    const constructedGenreCheckboxes = [];
-    for(const i in genres.current){
-      constructedGenreCheckboxes.push(
-        <div key = {"checkBox" + i}  className = {genres.current[i] + " " + "checkBox"}><input  key={i} type = "checkbox" onChange={(ev)=>{updateOption(ev, genres.current[i]);}}/><li>{genres.current[i]}</li></div>
-      );
-    }
-    return constructedGenreCheckboxes;
-  };
-
-  const getMovieList = ():ReactElement [] => {
-
-    let count = 0;
-
-    const movieList = data.current.map((subData)=>{
-      if(subData.title.toLowerCase().indexOf(searchVal.toLowerCase()) == -1){
-        return null;
-      }
-
-      for(let i = 0; i < selectedGenres.length; i++){
-        if(subData.genres.indexOf(selectedGenres[i]) == -1){
-          return null;
-        }
-      }
-
-      count = count+ 1;
-
-      return <div key = {uuidv4()} className = "movieCard anim" onClick = {()=>{toggleModal(true)}}>
-        <div className = "cardInnerContainer">
-          <img id="posterImg" className = "anim" src = {"../moviePosterImages/" + subData.id + ".jpeg" } 
-            onError={({ currentTarget }) => {
-              currentTarget.onerror = null; // prevents looping
-              currentTarget.src="../moviePosterImages/defaultImage.jpeg";
-            }}
-            alt = {subData.title + " poster"}></img>
-
-          <div className = "movieInfo">
-            <h1>{subData.title}</h1>
-            {/* <h2>Rating: {subData.vote_average}</h2>
-            <h2>Release Date: {subData.release_date}</h2> */}
-          </div>
-        </div>
-      </div>
-    })
-
-    if(count == 0){
-      return [<div className = "noResults"><h1>No Results</h1></div>]
-    } else {
-      return movieList;
-    }
+  const updateSearchText = (newVal) => {
+    setSearchVal(newVal);
   }
 
-  const getModal = ():ReactElement => { 
-    return <div id = "modalInner" ref={modalInner} className = "anim">
-              <img id = "heroImg" className = {"anim enlarged" + enlargedHero} src = {"../movieHeroImages/" + data2.current[0].id + ".jpeg" } 
-                onClick = {(ev)=>{ev.stopPropagation(); setEnlargedHero(!enlargedHero)}}
-                onError={({ currentTarget }) => {
-                  currentTarget.onerror = null; // prevents looping
-                  currentTarget.src="../movieHeroImages/defaultImage.jpeg";
-                }}
-                alt = {data2.current[0].title + " poster"}></img>
-                
-                <div id = "movieData">
-                  <h1>{data2.current[0].title}</h1>
-                  <h3>{data2.current[0].duration}</h3>
-                  <h3>{data2.current[0].releaseDate}</h3>
-                  <h3>{data2.current[0].releaseYear}</h3>
-                  <h3>{data2.current[0].genres}</h3>
-                  <h1>{data2.current[0].moods}</h1>
-                  <h2>{data2.current[0].description}</h2>
+  const getMovieList = ():ReactElement[] => {
+    return <Gallery 
+              availableGenres = {genres.current} 
+              selectedGenres = {selectedGenres}
+              searchVal = {searchVal}
+              movies={data.current}/>
+  }
 
-                  {data2.current[0].topCast.map((castMember)=>{
-                    return <div><h3>{castMember.name}</h3><h3>{castMember.characterName}</h3></div>
-                  })}
-                </div>
-            </div>
+  if (isLoading) {
+    return <div className="App">Loading...</div>;
   }
 
   return (
@@ -161,12 +134,12 @@ const App:React.FC = () : ReactElement => {
           {getModal()}
       </div>
       <div id = "outerFilterContainer" className = "container">
-        <input type="text" placeholder="Search" onChange = {(ev)=>{setSearchVal(ev.target.value)}}/>
+        <Searchbox currentSearchText = {searchVal} updateSearchText = {updateSearchText}/>
         <div id = "checkboxContainer" className = "container">
-          {getGenreCheckboxes()}
+        <Checkboxes availableGenres = {genres.current} selectedGenres = {selectedGenres } updateOption = {updateOption} />
         </div>
       </div>
-      <div id = "movieList">
+      <div >
         {getMovieList()}
       </div>
     </>

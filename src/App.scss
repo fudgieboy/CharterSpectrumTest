@@ -68,6 +68,7 @@ li{
   box-sizing: border-box;
   border-style: dashed double none;
   // position: ab;
+  position: relative;
 }
 
 .movieInfo{
@@ -77,6 +78,7 @@ li{
       font-size: 2em;
       position: absolute;
       margin: 0 auto;
+      top: -55px;
       left: 0px;
       right: 0px;
       // justify-content: center;
@@ -116,7 +118,7 @@ li{
 
 .enlargedtrue{
   box-shadow: 45px 45px 45px 45px rgba(0, 0, 0, .75);
-  width: 95%;
+  width: 80%;
 }
 
 #modalInner{
