@@ -9,7 +9,7 @@ interface MovieDetailP{
 export const Modal:React.FC = (props:MovieDetailP) : ReactElement => {
   const [enlargedHero, setEnlargedHero] = useState<boolean>(false);
  
-    return (  <div>
+    return (  <div id = "movieDataOuterContainer">
                     <img id = "heroImg" className = {"anim enlarged" + enlargedHero} src = {"../movieHeroImages/" + props.detailedInfo.id + ".jpeg" } 
                     onClick = {(ev)=>{ev.stopPropagation(); setEnlargedHero(!enlargedHero)}}
                     onError={({ currentTarget }) => {
