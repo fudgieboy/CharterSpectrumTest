@@ -1,6 +1,6 @@
 # CharterSpectrumTest
 
-I finished this a couple of hours ago, about 1pm est, but had to record and edit a video because I've been accused of heinous things that are false.
+Awesome test. I love tests like this. Building things like this, using React and Node are my expertise. I finished this a couple of hours ago, about 1pm est, but had to record and edit a video because I've been accused of heinous things that are false.
  
 Run using "npm run dev"
 
