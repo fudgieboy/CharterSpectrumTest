@@ -1,12 +1,15 @@
+// @ts-nocheck
+
 import React, {ReactElement} from 'react'
 import './global.scss'
-import { v4 as uuidv4 } from "uuid"
-import {getMovieData} from './API/GlobalAPI'
+import { v4 as uuidv4 } from "uuid" 
 
 interface GalleryP{
   availableGenres: Array<string>;
   selectedGenres: Array<string>;
   searchVal: string;
+  activateModal: ()=> void;
+  selectMovie: ()=> void;
   movies: [];
 }
 
@@ -26,9 +29,8 @@ export const Gallery:React.FC = (props:GalleryP) : ReactElement => {
         }
       }
 
-      count = count+ 1;
-
-      return <div key = {uuidv4()} className = "movieCard anim" onClick = {()=>{toggleModal(true)}}>
+      count = count+ 1; 
+      return <div key = {uuidv4()} className = "movieCard anim" onClick = {()=>{props.activateModal(true, subData)}}>
         <div className = "cardInnerContainer">
           <img id="posterImg" className = "anim" src = {"../moviePosterImages/" + subData.id + ".jpeg" } 
             onError={({ currentTarget }) => {
@@ -52,7 +54,7 @@ export const Gallery:React.FC = (props:GalleryP) : ReactElement => {
       return movieList;
     }
   }
-  
+
   return (  
     <div id = "movieList">
       {getMovieList()}

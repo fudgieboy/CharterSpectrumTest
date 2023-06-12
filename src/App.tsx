@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useState, useRef, useEffect } from 'react'
 // import {getVideoData} from './API/GlobalAPI'
 import {ReactElement} from 'react'
@@ -25,62 +27,86 @@ const App:React.FC = () : ReactElement => {
   const possibleGenres = useRef(null);
   const uniqueGenres = useRef(null);
   const [isLoading, setLoading] = useState(true);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   useEffect(() => {
     getAllMovies((res)=>{
       data.current = res;
       data2.current = [];
 
-      for(let i = 0; i < data.current.length; i++){
-        getMovieData(data.current[i].id, (res)=>{  
-          data2.current.push(res);
+      const temp = JSON.parse(localStorage.getItem("movieDetailInfo"));
 
-          if(data2.current.length == data.current.length && i == data.current.length - 1){
+        if(temp!=null && temp != undefined){
+          data2.current = temp.current;
+                    
+          possibleGenres.current = data.current.map((subData)=>{
+            return subData.genres;
+          })
 
-            if(data2.current.length!=0){
-              localStorage.setItem("movieDetailInfo", JSON.stringify(data2));
-            } 
-            
-            possibleGenres.current = data.current.map((subData)=>{
-              return subData.genres;
-            })
+          uniqueGenres.current = possibleGenres.current.reduce((genre1, genre2)=>{
+            const cat = genre1.concat(genre2.filter((genre)=>{
+              return genre1.indexOf(genre) == -1;
+            }));
+            return cat;
 
-            uniqueGenres.current = possibleGenres.current.reduce((genre1, genre2)=>{
-              const cat = genre1.concat(genre2.filter((genre)=>{
-                return genre1.indexOf(genre) == -1;
-              }));
-              return cat;
+          })
+          
+          genres.current = uniqueGenres.current
 
-            })
+          setSelectedMovie(data.current[0])
+          setLoading(false);
+        } else {
+          for(let i = 0; i < data.current.length; i++){
+            getMovieData(data.current[i].id, (res)=>{  
+              data2.current.push(res);
 
-            genres.current = uniqueGenres
+                if(i == data.current.length - 1){
+                  if(data2.current.length == data.current.length){
 
-            setLoading(false);
-          }
-        });
-
+                    if(data2.current.length!=0){
+                      localStorage.setItem("movieDetailInfo", JSON.stringify(data2));
+                    } 
+                    
+                    possibleGenres.current = data.current.map((subData)=>{
+                      return subData.genres;
+                    })
+          
+                    uniqueGenres.current = possibleGenres.current.reduce((genre1, genre2)=>{
+                      const cat = genre1.concat(genre2.filter((genre)=>{
+                        return genre1.indexOf(genre) == -1;
+                      }));
+                      return cat;
+          
+                    })
+                    genres.current = uniqueGenres.current;
+                    setSelectedMovie(data[0])
+                    setLoading(false);
+                }
+              }
+          });
+        }
       }
-      
     });
   }, []) 
 
-  const toggleModal = (isModalActive):void => {
-    const time = new Date();
+  const toggleModal = (isModalActive, movieID):void => {
 
+    const time = new Date();
     if(isTransitioning == false){
       const interval = setInterval(() => {
         const time2 = (new Date().getTime() - time.getTime());
-
+        
         if(isModalActive == true){
           modal.current.style.display = 'block';
           modal.current.style.backdropFilter = 'blur(' + (time2 / 100) + 'px)';
           modalInner.current.style.opacity = (time2 / 1000).toString();
+          setSelectedMovie(movieID);
         } else if (isModalActive == false){
           modal.current.style.backdropFilter = 'blur(' + (5-(time2 / 100)) + 'px)';
           modalInner.current.style.opacity = (1- (time2 / 1000)).toString();
         }
 
-            setIsTransitioning(true);
+        setIsTransitioning(true);
         if(time2 > 1000){
           if (isModalActive == false){
             modal.current.style.display = 'none';
@@ -94,9 +120,13 @@ const App:React.FC = () : ReactElement => {
   };
 
   const getModal = ():ReactElement => { 
-    return <div id = "modalInner" ref={modalInner} className = "anim">
-              <Modal detailedInfo = {data2.current} />
-            </div>
+    for(let i = 0; i < data.current.length; i++){
+      if(data2.current[i].id == selectedMovie.id){
+        return <div id = "modalInner" ref={modalInner} className = "anim">
+                  <Modal detailedInfo = {data2.current[i]} />
+                </div>
+      }
+    }
   }
 
   const updateOption = (ev, genre:string):void => {
@@ -112,8 +142,10 @@ const App:React.FC = () : ReactElement => {
     setSearchVal(newVal);
   }
 
+
   const getMovieList = ():ReactElement[] => {
-    return <Gallery 
+    return <Gallery
+              activateModal = {toggleModal}
               availableGenres = {genres.current} 
               selectedGenres = {selectedGenres}
               searchVal = {searchVal}
@@ -123,7 +155,7 @@ const App:React.FC = () : ReactElement => {
   if (isLoading) {
     return <div className="App">Loading...</div>;
   }
-
+  
   return (
     <> 
       <div id = "modal" 

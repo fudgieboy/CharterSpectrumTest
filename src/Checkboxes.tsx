@@ -8,7 +8,9 @@ interface OptionP{
   updateOption: (ev: React.ChangeEvent, genre: string) => void;
 }
 
+
 export const Checkboxes:React.FC = (props:OptionP) : ReactElement => {
+
   const getGenreCheckboxes = (): ReactElement[]=> {
     const constructedGenreCheckboxes = [];
     for(const i in props.availableGenres){
@@ -20,7 +22,10 @@ export const Checkboxes:React.FC = (props:OptionP) : ReactElement => {
       }
       
       constructedGenreCheckboxes.push(
-        <div key = {uuidv4()} className = {props.availableGenres[i] + " " + "checkBox"}><input  key={i} checked = {checked} type = "checkbox" onChange={(ev)=>{props.updateOption(ev, props.availableGenres[i]);}}/><li>{props.availableGenres[i]}</li></div>
+        <div key = {uuidv4()} className = {props.availableGenres[i] + " " + "checkBox"}>
+          <input  key={i} checked = {checked} type = "checkbox" onChange={(ev)=>{props.updateOption(ev, props.availableGenres[i]);}}/>
+          <li>{props.availableGenres[i]}</li>
+        </div>
       );
     }
     return constructedGenreCheckboxes;

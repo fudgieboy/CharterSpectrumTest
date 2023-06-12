@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 export const getAllMovies = async (callback) => {
 
   const res = await fetch("https://code-challenge.spectrumtoolbox.com/api/movies", {
