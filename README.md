@@ -19,7 +19,7 @@ Ofcourse, because I was trying to respect boundaries she immediately takes advan
 
 She doesn't understand how as a guy being accused of making a woman unsafe after she's the one that initiates sexual contact can make me feel unsafe, because I as a guy I don't have to have actually done anything wrong for a woman to make up a story and like...limit my work opportunities and get me fired or something.
 
-There was another instance of a woman that was sleeping with a bunch of men trying to sleep with me and I rejected her as well, and almost got shot because of it.
+There was another instance of a woman that was sleeping with a bunch of men trying to sleep with me and I rejected her as well, and we both almost got shot by the cops because of it.
 
 Anyway, the app works.
 
