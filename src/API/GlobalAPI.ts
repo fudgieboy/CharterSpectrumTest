@@ -1,6 +1,6 @@
 export const getAllMovies = async (callback) => {
 
-  const res = await fetch("https://code-challenge.spectrumtoolbox.com/api/movies", {
+  await fetch("https://code-challenge.spectrumtoolbox.com/api/movies", {
     headers: {
       Authorization: "Api-Key q3MNxtfep8Gt",
     },
@@ -16,7 +16,7 @@ export const getAllMovies = async (callback) => {
   })
 }
 export const getMovieData = async(movieID, callback) => {
-    const res = await fetch("https://code-challenge.spectrumtoolbox.com/api/movies/" + movieID, {
+    await fetch("https://code-challenge.spectrumtoolbox.com/api/movies/" + movieID, {
       headers: {
         Authorization: "Api-Key q3MNxtfep8Gt",
       },
