@@ -21,5 +21,6 @@ She doesn't understand how as a guy being accused of making a woman unsafe after
 
 There was another instance of a woman that was sleeping with a bunch of men trying to sleep with me and I rejected her as well, and we both almost got shot by the cops because of it.
 
-Anyway, the app works.
+Women think I'm some kind of virgin extremist or something when that's the opposite of true. I almost died many times recently and the last time I really liked a woman as a person was 2006 in highshool. Guys keep telling me I should increase my standards, but you can't really help love like that. So I basically tried to ask women if they're capable of excersising restraint and try to figure out if a guy wants to be with them beyond sex and boy oh boy did they not like that.  
 
+Anyway, the app works.
