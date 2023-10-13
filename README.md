@@ -8,19 +8,4 @@ I could deploy using Vercel, just AWS or Heroku, but chose Vercel for the extrem
 
 Here is the link:
 
-https://charter-spectrum-test-fg1s.vercel.app/
-
-I should also add that recently women have accused me of being a misogynist and tried to have me canceled, but the truth is they're making up stories. For instance, one roommate, while I was getting undressed and in my underwear, pokes her head into my room and stares at me momentarily while I'm in my underwear. It didn't bother me because I'm way bigger than her. I later explain that I'm uninterested in anything casual for any reason because it's unethical to sleep with a woman that's potentially vulnerable.
-
-Here's the audio of her accusing me of being weird, then pretending not to remember that she's the one that made a pass at me:
-https://www.youtube.com/watch?v=IWE_LUA-i6o
-
-Ofcourse, because I was trying to respect boundaries she immediately takes advantage of that and later accuses me of being a predator and making her unsafe by talking to her in my underwear. 
-
-She doesn't understand how as a guy being accused of making a woman unsafe after she's the one that initiates sexual contact can make me feel unsafe, because I as a guy I don't have to have actually done anything wrong for a woman to make up a story and like...limit my work opportunities and get me fired or something.
-
-There was another instance of a woman that was sleeping with a bunch of men trying to sleep with me and I rejected her as well, and we both almost got shot by the cops because of it.
-
-Women think I'm some kind of virgin extremist or something when that's the opposite of true. I almost died many times recently and the last time I really liked a woman as a person was 2006 in highshool. Guys keep telling me I should increase my standards, but you can't really help love like that. So I basically tried to ask women if they're capable of excersising restraint and try to figure out if a guy wants to be with them beyond sex and boy oh boy did they not like that.  
-
-Anyway, the app works.
+https://charter-spectrum-test-fg1s.vercel.app/ 
